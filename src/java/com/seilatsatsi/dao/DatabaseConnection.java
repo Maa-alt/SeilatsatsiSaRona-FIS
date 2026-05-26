@@ -7,13 +7,18 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static Connection connection = null;
     
-    // Database configuration - UPDATE THESE VALUES
-    private static final String URL = "jdbc:mysql://localhost:3306/seilatsatsi_fis?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String USERNAME = "root";  // Your MySQL username
-    private static final String PASSWORD = "123456"; // Change to your actual password
+    // Database configuration - Read from environment variables
+    private static final String URL = "jdbc:mysql://mysql-2bb4ee1f-mpeoanemaapesa89-5f41.h.aivencloud.com:26541/defaultdb?useSSL=true&requireSSL=true&serverTimezone=UTC&sslMode=REQUIRED";
+    private static final String USERNAME = "avnadmin";
+    private static final String PASSWORD = System.getenv("DB_PASSWORD");
     
     public static Connection getConnection() {
         try {
+            if (PASSWORD == null || PASSWORD.isEmpty()) {
+                System.err.println("❌ DB_PASSWORD environment variable not set!");
+                return null;
+            }
+            
             if (connection == null || connection.isClosed()) {
                 // Load MySQL Driver
                 Class.forName("com.mysql.cj.jdbc.Driver");
